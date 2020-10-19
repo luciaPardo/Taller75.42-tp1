@@ -13,18 +13,22 @@ struct server{
 
 typedef struct server server_t;
 
+/*Inicializa el server */
 void server_init(server_t* server, const char* port);
 
-int server_connect (server_t* self);
+/*conecta el server */
+int server_connect(server_t* self);
 
+/*Permite escuchar posibles conexiones*/
 bool server_listen(server_t* self, struct addrinfo* results);
 
-int server_send(server_t* self, unsigned char* msg, size_t msg_size);
-
+/* Recibe mensajes del cliente */
 int server_recv(server_t* self, unsigned char* msg, size_t msg_size);
 
+/*Acepta la conexión de un cliente */
 int server_accept_client(server_t* self);
 
+/*Cierra el server */
 void server_close(server_t* self);
 
 #endif

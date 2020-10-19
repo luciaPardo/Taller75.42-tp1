@@ -10,12 +10,11 @@
 #define MAX_BUFF 64
 
 int main(int argc, const char*  argv[]) {
-	
-	
     if (argc != ARGS){
 		printf("%d  \n", argc);
         printf("Error de cantidad de parámetros \n");
-        printf("Utilizar forma ./client <client-host> <client-port> --method=<method> --key=<key>");
+        printf("Utilizar forma ./client <client-host>");
+        printf(" <client-port> --method=<method> --key=<key>");
         return -1;
     } 
     client_t client;
@@ -37,7 +36,8 @@ int main(int argc, const char*  argv[]) {
      
     method++;
 
-    if (strcmp(method, "cesar") && strcmp(method, "vigenere") && strcmp(method, "rc4")){
+    if (strcmp(method, "cesar") && strcmp(method, "vigenere")
+                                                && strcmp(method, "rc4")){
         printf("Método ingresado inválido \n");
         return -1;
     }
@@ -47,23 +47,20 @@ int main(int argc, const char*  argv[]) {
     key++; 
     cipher_t cipher;
     cipher_init(&cipher, method, key);
-    int bytes_sent = 0;
     unsigned char buff[MAX_BUFF] = {0};
     unsigned char msg[MAX_BUFF] = {0};
-
-
     while (!feof(stdin)){
-    
-    size_t result = fread( msg, 1,  MAX_BUFF, stdin );
-    encrypt(&cipher,msg, buff, result);
-    bytes_sent = client_send(&client, buff, result);
-    if( bytes_sent < 0 || result == 0)
-        break;
+        size_t result = fread(msg, 1,  MAX_BUFF, stdin);
+        encrypt(&cipher,msg, buff, result);
+        int bytes_sent = client_send(&client, buff, result);
+        if ( bytes_sent < 0 || result == 0)
+            break;
     }
-    if(strcmp(method, "rc4") == 0){
+    if (strcmp(method, "rc4") == 0){
         cipher_close(&cipher);
     } 
     client_close(&client); 
     return 0;  
 }
+
 	

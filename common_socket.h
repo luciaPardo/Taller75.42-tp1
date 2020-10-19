@@ -18,9 +18,6 @@ typedef struct socket socket_t;
 
 typedef struct addrinfo addrinfo_t;
 
-/*Inicializa un socket con fd -1*/
-void socket_init(socket_t* self);
-
 /*crea un socket*/
 void socket_create(socket_t* self, struct addrinfo* ptr);
 

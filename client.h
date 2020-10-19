@@ -24,10 +24,7 @@ int client_connect(client_t* client);
 int client_iterate_results(client_t* client,struct addrinfo* result);
 
 /*Manda mensajes del cliente*/
-int client_send( client_t* client, unsigned char* message,size_t msg_size);
-
-/*Recibe mensajes del cliente */
-int client_recieve(client_t* client, unsigned char* msg, size_t rec_size);
+int client_send(client_t* client, unsigned char* message,size_t msg_size);
 
 /*Cierra el socket correspondiente a ese cliente*/
 void client_close(client_t* client);

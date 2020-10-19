@@ -16,7 +16,6 @@
 void client_init(client_t* client, const char* host, const char* port){
     client->host = host;
     client->port = port;
-    client->skt = (client->skt);
 }
 
 int client_connect(client_t* client){
@@ -44,14 +43,14 @@ int client_connect(client_t* client){
 
 int client_iterate_results(client_t* client,addrinfo_t* result){
     struct addrinfo* ptr;   
-    int peer;
     bool is_connected = false;
 
-    for (ptr = result; ptr != NULL && is_connected == false; ptr = ptr->ai_next){
-        peer = socket_connect(client->skt, ptr);
+    for (ptr = result; ptr != NULL && is_connected == false;
+                                             ptr = ptr->ai_next){
+        int peer = socket_connect(client->skt, ptr);
         if (peer == -1) {
             continue;
-            fprintf(stderr,"Error : %s\n", strerror(errno));
+            
         }
         is_connected = (peer != -1); 
    }
@@ -62,12 +61,8 @@ int client_send(client_t* client, unsigned char* msg, size_t msg_size){
     return socket_send(client->skt, msg, msg_size);
 }  
 
-int client_recieve(client_t* client, unsigned char* msg, size_t rec_size){
-    return socket_receive(client->skt, msg, rec_size);
-}
-
 void client_close(client_t* client){
-    if(!client) return;
+    if (!client) return;
     socket_close(client->skt);
 }
 
