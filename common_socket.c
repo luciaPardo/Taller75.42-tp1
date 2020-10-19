@@ -90,7 +90,7 @@ int socket_receive(socket_t* self, unsigned char msg[], size_t msg_size){
 
     while (new_bytes < msg_size){
         new_bytes = recv(self->fd, &msg[tot_bytes], msg_size - tot_bytes, 0);
-        if (new_bytes == -1 ){
+        if (new_bytes == -1){
             fprintf(stderr, "Error del receive new bytes: %s \n",
                                                              strerror(errno));
             return -1;

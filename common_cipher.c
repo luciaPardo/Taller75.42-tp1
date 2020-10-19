@@ -34,8 +34,9 @@ void cipher_init(cipher_t* self,char* method, char* key){
 }
 
 
-void encrypt(cipher_t* self, unsigned char* msg, unsigned char* buff,
-                                                        size_t size_msg){                               
+void encrypt(cipher_t* self, unsigned char* msg, 
+                                                unsigned char* buff,
+                                              size_t size_msg){
   self->encrypt_func(self, msg, buff, size_msg);
 }
 
@@ -46,8 +47,9 @@ void decipher(cipher_t* self, unsigned char* msg, unsigned char* buff,
 }
 
 
-void cesar_encrypt(cipher_t* self, unsigned char* msg, unsigned char* buff,
-                                                          size_t size_msg){                                             
+void cesar_encrypt(cipher_t* self, unsigned char* msg, 
+                                                      unsigned char* buff,
+                                                      size_t size_msg){
   int offset;                                            
   if ((offset = atoi(self->key)) == 0){
     printf("Error offset método cesar %d \n", offset);
@@ -58,8 +60,9 @@ void cesar_encrypt(cipher_t* self, unsigned char* msg, unsigned char* buff,
   }
 }
 
-void cesar_desencrypt(cipher_t* self, unsigned char* msg,unsigned char* buff,
-                                                            size_t size_msg){                                                               
+void cesar_desencrypt(cipher_t* self, unsigned char* msg,
+                                                        unsigned char* buff,
+                                                        size_t size_msg){
   int offset;
   if ((offset = atoi(self->key)) == 0){
     return;
@@ -69,8 +72,9 @@ void cesar_desencrypt(cipher_t* self, unsigned char* msg,unsigned char* buff,
   }
 }
 
-void vigenere_encrypt(cipher_t* self, unsigned char* msg, unsigned char* buff,
-                                                            size_t size_msg){                                                           
+void vigenere_encrypt(cipher_t* self, unsigned char* msg, 
+                                                        unsigned char* buff,
+                                                        size_t size_msg){
   ssize_t len_key = strlen(self->key);
   for (self->j = 0; self->j < size_msg ; self->i++, self->j++){
       self->i = self->i % len_key;
@@ -78,8 +82,9 @@ void vigenere_encrypt(cipher_t* self, unsigned char* msg, unsigned char* buff,
   }
 }
 
-void vigenere_desencrypt(cipher_t* self, unsigned char* msg, unsigned char* buff,
-                                                              size_t size_msg){
+void vigenere_desencrypt(cipher_t* self, unsigned char* msg, 
+                                                        unsigned char* buff,
+                                                        size_t size_msg){
   ssize_t len_key = strlen(self->key);
   for (self->j = 0; self->j < size_msg ; self->i++, self->j++){
       self->i = self->i % len_key;
@@ -92,14 +97,13 @@ void swap(unsigned char* s, unsigned int i, unsigned int j) {
     unsigned char temp = s[i];
     s[i] = s[j];
     s[j] = temp;
-    
 }
 
-void rc4_init(cipher_t* self,unsigned char buff[]){                                                        
+void rc4_init(cipher_t* self,unsigned char buff[]){
     ssize_t len_key = strlen(self->key);
-    for(self->i = 0; self->i < VAL_ASCII; self->i++)
+    for (self->i = 0; self->i < VAL_ASCII; self->i++)
         buff[self->i] = self->i;
-    for (self->i = self->j = 0; self->i < VAL_ASCII; self->i++) {
+    for (self->i = self->j = 0; self->i < VAL_ASCII; self->i++){
         self->j = (self->j + self->key[self->i % len_key] + buff[self->i])
                                                                 % VAL_ASCII;
         swap(buff, self->i, self->j);
@@ -109,7 +113,7 @@ void rc4_init(cipher_t* self,unsigned char buff[]){
 }
 
 void rc4_encrypt(cipher_t* self, unsigned char* msg, unsigned char* ret,
-                                                            size_t size_msg){
+                                                        size_t size_msg){
     for (int k = 0; k < size_msg ; k++){
       self->i = (self->i + 1) % VAL_ASCII;
       self->j = (self->j + self->ks[self->i]) % VAL_ASCII;

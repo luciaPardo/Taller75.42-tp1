@@ -36,12 +36,14 @@ void cipher_init(cipher_t* self, char* method, char* key);
 void encrypt(cipher_t* self, unsigned char* msg, unsigned char* buff,
                                                           size_t size_msg);
 
-/*Función genérica para llamar al desencriptador respectivo de cada método*/                                                           
+/*Función genérica para llamar al desencriptador respectivo de cada 
+método*/                                     
 void decipher(cipher_t* self, unsigned char* msg, unsigned char* buff,
-                                                           size_t size_msg);
+                                                          size_t size_msg);
+
 /*Función encriptadora del cifrador cesar*/
 void cesar_encrypt(cipher_t* self, unsigned char* msg, unsigned char* buff,
-                                                           size_t size_msg);
+                                                          size_t size_msg);
 
 /*Función desencriptadora del cifrador cesar*/
 void cesar_desencrypt(cipher_t* self, unsigned char* msg,unsigned char* buff,

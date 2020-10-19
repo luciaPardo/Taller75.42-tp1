@@ -49,8 +49,7 @@ int client_iterate_results(client_t* client,addrinfo_t* result){
                                              ptr = ptr->ai_next){
         int peer = socket_connect(client->skt, ptr);
         if (peer == -1) {
-            continue;
-            
+            continue;  
         }
         is_connected = (peer != -1); 
    }

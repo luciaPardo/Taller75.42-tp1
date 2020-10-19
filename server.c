@@ -32,7 +32,7 @@ int server_connect(server_t* self){
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
-    if (getaddrinfo (NULL,self->port, &hints, &results) != 0 ){
+    if (getaddrinfo(NULL,self->port, &hints, &results) != 0){
         fprintf(stderr,"Error obteniendo informacion getaddrinfo.\n");
         return -1;
     }
