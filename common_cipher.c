@@ -15,17 +15,20 @@ void cipher_init(cipher_t* self,char* method, char* key){
     self->i = 0;
     self->j = 0;
     self->key = key;
+    self->method = method;
   if (strcmp(method, "cesar") == 0){
     self->encrypt_func = cesar_encrypt;
     self->desencrypt_func = cesar_desencrypt;
   }
 
   if (strcmp(method, "vigenere") == 0){
+    self->len_key = strlen(self->key);
     self->encrypt_func = vigenere_encrypt;
     self->desencrypt_func = vigenere_desencrypt;
   }
   
-  if (strcmp(method, "rc4") == 0){    
+  if (strcmp(method, "rc4") == 0){ 
+    self->len_key = strlen(self->key);   
     self->ks = malloc(VAL_ASCII * sizeof(unsigned char));
     rc4_init(self, self->ks);
     self->encrypt_func = rc4_encrypt;
@@ -75,9 +78,8 @@ void cesar_desencrypt(cipher_t* self, unsigned char* msg,
 void vigenere_encrypt(cipher_t* self, unsigned char* msg, 
                                                         unsigned char* buff,
                                                         size_t size_msg){
-  ssize_t len_key = strlen(self->key);
   for (self->j = 0; self->j < size_msg ; self->i++, self->j++){
-      self->i = self->i % len_key;
+      self->i = self->i % self->len_key;
       buff[self->j] = (msg[self->j] + self->key[self->i]) % VAL_ASCII;
   }
 }
@@ -85,9 +87,8 @@ void vigenere_encrypt(cipher_t* self, unsigned char* msg,
 void vigenere_desencrypt(cipher_t* self, unsigned char* msg, 
                                                         unsigned char* buff,
                                                         size_t size_msg){
-  ssize_t len_key = strlen(self->key);
   for (self->j = 0; self->j < size_msg ; self->i++, self->j++){
-      self->i = self->i % len_key;
+      self->i = self->i % self->len_key;
       buff[self->j] = (msg[self->j] - self->key[self->i]) % VAL_ASCII;
   }
 }
@@ -100,11 +101,10 @@ void swap(unsigned char* s, unsigned int i, unsigned int j) {
 }
 
 void rc4_init(cipher_t* self,unsigned char buff[]){
-    ssize_t len_key = strlen(self->key);
     for (self->i = 0; self->i < VAL_ASCII; self->i++)
         buff[self->i] = self->i;
     for (self->i = self->j = 0; self->i < VAL_ASCII; self->i++){
-        self->j = (self->j + self->key[self->i % len_key] + buff[self->i])
+        self->j = (self->j + self->key[self->i % self->len_key] + buff[self->i])
                                                                 % VAL_ASCII;
         swap(buff, self->i, self->j);
     }
@@ -124,6 +124,7 @@ void rc4_encrypt(cipher_t* self, unsigned char* msg, unsigned char* ret,
 }
 
 void cipher_close(cipher_t* self){
+  if (strcmp(self->method, "rc4") == 0)
     free(self->ks);
 }
 

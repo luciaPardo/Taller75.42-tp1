@@ -1,6 +1,8 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 struct cipher;
 
@@ -18,13 +20,16 @@ struct cipher{
   encrypt_func_t encrypt_func;
   desencrypt_func_t desencrypt_func;
   unsigned char* ks;
+  ssize_t len_key;
+  char* method;
 };
 /*Estructura cipher con
 key --> clave cifradora de cada método
 i, j --> ínidices
 encrypt_func_t encrypt_func; --> puntero a función genérica de encriptar
 desencrypt_func_t desencrypt_func;
-ks --> keystream utilizado sólo por rc4*/
+ks --> keystream utilizado sólo por rc4
+len_key longitud de la clave (usado por vigenere y rc4)*/
 
 
 typedef struct cipher cipher_t;

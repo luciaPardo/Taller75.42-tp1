@@ -5,9 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <netdb.h>
 #include <sys/socket.h>
-#include <errno.h>
 #include <unistd.h> 
 #include <sys/types.h>
 #define MAX_BUFF 64
@@ -16,14 +14,14 @@
 #define METHOD 2
 #define KEY 3
 
-int main(int argc, const char* argv[]){
-    if (argc != ARGS){
-        printf("Error de cantidad de parámetros \n");
-        printf("Utilizar forma ./server <puerto>"); 
-        printf("--method=<cifrado> --key=<clave> \n");
+bool validate_and_init_cipher(const char* pre_method, const char* pre_key, 
+                                                        cipher_t* cipher);
+bool correct_args(int argc);
+
+int main(int argc, char* argv[]){
+    if ( ! correct_args(argc) ){
         return -1;
     } 
-
     server_t server;
     socket_t socket;
     server.skt = &socket;   
@@ -38,21 +36,10 @@ int main(int argc, const char* argv[]){
         server_close(&server);
         return -1;
     }
-   
-    char* method;
-    if ((method = strchr(argv[METHOD], '=')) == NULL)
-        return -1;
-    method++;
-    if (strcmp(method, "cesar") && strcmp(method, "vigenere")
-                                         && strcmp(method, "rc4")){
-        printf("Método ingresado inválido \n");
+    cipher_t cipher;
+    if (!validate_and_init_cipher(argv[METHOD], argv[KEY], &cipher)){
         return -1;
     }
-    char* key = strchr(argv[KEY], '=');
-    if ( key == NULL ) return -1;
-    key++; 
-    cipher_t cipher;
-    cipher_init(&cipher, method, key);
     unsigned char buff[MAX_BUFF] = {0};
     unsigned char msg[MAX_BUFF] = {0};
 
@@ -63,10 +50,37 @@ int main(int argc, const char* argv[]){
         decipher(&cipher, msg, buff, new_bytes);
         fwrite(buff, 1, new_bytes , stdout);
     }
-    
-    if (strcmp(method, "rc4") == 0){
-        cipher_close(&cipher);
-    }
+    cipher_close(&cipher);
     server_close(&server); 
     return 0;  
 }
+
+bool validate_and_init_cipher(const char* pre_method, const char* pre_key, 
+                                                        cipher_t* cipher){
+    char* method;
+    if ((method = strchr(pre_method, '=')) == NULL)
+        return false;
+    method++;
+    if (strcmp(method, "cesar") && strcmp(method, "vigenere")
+                                         && strcmp(method, "rc4")){
+        printf("Método ingresado inválido \n");
+        return false;
+    }
+    char* key = strchr(pre_key, '=');
+    if ( key == NULL ) return -1;
+    key++; 
+    cipher_init(cipher, method, key);
+    return true;
+}
+
+bool correct_args(int argc){
+    if (argc != ARGS){
+        printf("Error de cantidad de parámetros \n");
+        printf("Utilizar forma ./server <puerto>"); 
+        printf("--method=<cifrado> --key=<clave> \n");
+        return false;
+    } 
+    return true;
+}
+
+
