@@ -67,7 +67,7 @@ bool validate_and_init_cipher(const char* pre_method, const char* pre_key,
         return false;
     }
     char* key = strchr(pre_key, '=');
-    if ( key == NULL ) return -1;
+    if ( key == NULL ) return false;
     key++; 
     cipher_init(cipher, method, key);
     return true;

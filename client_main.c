@@ -45,7 +45,7 @@ int main(int argc, const char*  argv[]) {
 }
 
 bool validate_and_init_cipher(cipher_t* cipher, const char* pre_method, 
-                                                        const char* pre_key){                                                               
+                                                        const char* pre_key){
     char* method;
     if ((method = strchr(pre_method, '=')) == NULL)
         return false;
@@ -56,7 +56,7 @@ bool validate_and_init_cipher(cipher_t* cipher, const char* pre_method,
         return false;
     }
     char* key = strchr(pre_key, '=');
-    if ( key == NULL ) return -1;
+    if ( key == NULL ) return false;
     key++; 
     cipher_init(cipher, method, key);
     return true;
