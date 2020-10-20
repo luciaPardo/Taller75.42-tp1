@@ -22,7 +22,7 @@ Se comenzó tratando de abstraer lo máximo posible los TDAS, por lo que se crea
 De esta forma generalizando, el modelo se puede visualizar con el siguiente diagrama:
 
 
-![Diagrama clases](Diagrama_clases.png)
+![Diagrama clases](IMG/Diagramaclases.png)
 
 ## Flujo
 
@@ -37,7 +37,7 @@ Una vez inicializado el server se procede en otra terminal a inicializar el clie
 A continuación podemos ver el flujo que mantiene el programa tanto con servidor como con cliente.
 
 
-![Diagrama de flujo](Diagrama_de_flujo.png)
+![Diagrama de flujo](DiagramaDeFlujo.png)
 
 
 
