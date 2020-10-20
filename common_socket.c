@@ -18,6 +18,7 @@ int socket_connect(socket_t* self, struct addrinfo* ptr){
     socket_create(self, ptr);
     if (self->fd == -1){
         printf("ERROR asignando socket \n");
+        socket_close(self);
         return -1; 
     }
 

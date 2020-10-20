@@ -25,6 +25,7 @@ int main(int argc, const char*  argv[]) {
     if ( client_connect(&client) < 0 ){
         printf("Error conectando el cliente \n");
         client_close(&client);
+        return -1;
     }    
     
     char* method;

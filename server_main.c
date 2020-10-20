@@ -33,8 +33,10 @@ int main(int argc, const char* argv[]){
     
     if ( server_connect(&server) < 0 ){
         server_close(&server);
+        return -1;
     }else if ( server_accept_client(&server) < 0 ){
         server_close(&server);
+        return -1;
     }
    
     char* method;

@@ -65,11 +65,12 @@ int server_accept_client(server_t* self){
 }
 
 int server_recv(server_t* self, unsigned char* msg, size_t msg_size){
-    return socket_receive (self->client_skt, msg, msg_size);
+    return socket_receive(self->client_skt, msg, msg_size);
 }
 
 void server_close(server_t* self){
     socket_close(self->skt);
+    socket_close(self->client_skt);
 }
 #ifdef PRUEBAS
 #endif
