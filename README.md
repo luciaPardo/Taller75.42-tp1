@@ -22,7 +22,7 @@ Se comenzó tratando de abstraer lo máximo posible los TDAS, por lo que se crea
 De esta forma generalizando, el modelo se puede visualizar con el siguiente diagrama:
 
 
-![Diagrama clases](IMG/Diagramaclases.png)
+![Diagrama clases](Diagramaclases.png)
 
 ## Flujo
 
