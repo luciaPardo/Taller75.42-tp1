@@ -9,6 +9,81 @@
 #include <errno.h>
 #include <unistd.h> 
 
+#define MAX_BYTES 64
+#define MAX_CLIENTS 1
+
+void socket_init(socket_t* self){
+    self->fd = -1;
+}
+
+int client_iterate_results(socket_t* self, addrinfo_t* result){
+    struct addrinfo* ptr;   
+    bool is_connected = false;
+
+    for (ptr = result; ptr != NULL && is_connected == false;
+                                             ptr = ptr->ai_next){
+        int peer = socket_connect(self, ptr);
+        if (peer == -1) {
+            continue;  
+        }
+        is_connected = (peer != -1); 
+   }
+   return is_connected;
+}
+
+int socket_client_connect(socket_t* self, const char* host, const char* port){
+    int err = 0;
+    struct addrinfo* result;
+    if (socket_configurar_inf(self, false, port, host, &result) < 0){
+        fprintf(stderr,"Error obteniendo informacion getaddrinfo.\n");
+        err = -1;
+    }
+    if (client_iterate_results(self, result) == -1){
+        printf("Error en resultados");
+        err = -1;
+    }
+    freeaddrinfo(result);
+    return err;
+}
+
+
+int socket_configurar_inf(socket_t* self, bool serv_flag,const char* port,
+                                                const char* host,
+                                                struct addrinfo** results){
+    struct addrinfo hints;
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = serv_flag ? AI_PASSIVE : 0;
+    if (getaddrinfo(host, port, &hints, results) != 0){
+        fprintf(stderr,"Error obteniendo informacion getaddrinfo.\n");
+        return -1;
+    }
+    return 0;
+}
+
+
+int socket_server_connect(socket_t* self, const char* port){
+    struct addrinfo* results;
+    struct addrinfo* ptr;
+    bool is_connected = false;
+    if (socket_configurar_inf(self, true, port, NULL, &results) < 0){
+        fprintf(stderr,"Error obteniendo informacion getaddrinfo.\n");
+        return -1;
+    }
+    for (ptr = results; ptr != NULL && is_connected == false;
+                                                 ptr = ptr->ai_next){
+        socket_create(self, ptr);
+        if (!socket_bind(self, results->ai_addr, results->ai_addrlen))
+            return -1;
+        if (!socket_listen(self, MAX_CLIENTS))
+            return -1;
+        is_connected = true;
+    }
+    freeaddrinfo(results);
+    return 0;
+}
+
 
 void socket_create(socket_t* self, struct addrinfo* ptr){
     self->fd = socket(ptr->ai_family,ptr->ai_socktype,ptr->ai_protocol);
@@ -28,7 +103,6 @@ int socket_connect(socket_t* self, struct addrinfo* ptr){
         socket_close(self);
         return -1;
     }
-    shutdown(self->fd, SHUT_RD);
     return peer;
 }
 
@@ -96,8 +170,8 @@ int socket_receive(socket_t* self, unsigned char msg[], size_t msg_size){
                                                              strerror(errno));
             return -1;
         }else if (new_bytes == 0){
-            return 0;
-        }else if (new_bytes < 64){
+            return tot_bytes;
+        }else if (new_bytes < MAX_BYTES){
             return new_bytes;
         }
         tot_bytes += new_bytes;
@@ -112,5 +186,3 @@ void socket_close(socket_t* self){
     if (close(self->fd) == -1) 
         printf("Error: %s", strerror(errno));
 }
-#ifdef PRUEBAS
-#endif 

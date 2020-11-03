@@ -18,6 +18,14 @@ typedef struct socket socket_t;
 
 typedef struct addrinfo addrinfo_t;
 
+void socket_init(socket_t* self);
+
+/*conecta socket para servidor y lo conecta a un cliente*/
+int socket_server_connect(socket_t* self, const char* port);
+
+/*conecta socket para cliente*/
+int socket_client_connect(socket_t* self, const char* host, const char* port);
+
 /*crea un socket*/
 void socket_create(socket_t* self, struct addrinfo* ptr);
 
@@ -30,6 +38,10 @@ bool socket_bind(socket_t* self, struct sockaddr* ai_addr,
 /*Escucha por conexiones*/
 bool socket_listen(socket_t* self, int cant);
 
+/*itera los resultados de gettadrrinfo*/
+int socket_configurar_inf(socket_t* self, bool serv_flag, const char* port, 
+                                                const char* host,
+                                                struct addrinfo** results);
 /*Acepta un cliente y setea su file descriptor*/
 void socket_accept(socket_t* self, socket_t* skt_client);
 

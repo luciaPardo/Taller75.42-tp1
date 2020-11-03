@@ -44,3 +44,9 @@ A continuación podemos ver el flujo que mantiene el programa tanto con servidor
 Este diagrama intenta ilustrar los pasos que se siguen, pero para mayor claridad se omitieron la creación y destrucción de algunos objetos.
 
 
+## Reentrega
+
+Se modificaron algunas acciones que realizaba el cliente y el servidor, que en realidad eran del socket, logrando con esto mayor reutilización de código y manejar bien las responsabilidades. 
+Se quitó además la lógica que contenían los main, quedando únicamente los llamados que delegan.
+Respecto a los cifradores, se mantuvo el modelo planteado ya que se consideró que era lo que más abstraía y generalizaba la clase.
+ 

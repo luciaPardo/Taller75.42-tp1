@@ -29,7 +29,7 @@ void cipher_init(cipher_t* self,char* method, char* key){
   
   if (strcmp(method, "rc4") == 0){ 
     self->len_key = strlen(self->key);   
-    self->ks = malloc(VAL_ASCII * sizeof(unsigned char));
+    self->ks =  malloc(VAL_ASCII * sizeof(unsigned char));
     rc4_init(self, self->ks);
     self->encrypt_func = rc4_encrypt;
     self->desencrypt_func = rc4_encrypt;
